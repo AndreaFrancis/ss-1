@@ -1,28 +1,24 @@
-/**
- * Created by Andrea on 20/05/2015.
- */
-var express = require("express"),
-    app = express(),
-    http = require("http"),
-    server = http.createServer(app);
-app.configure(function() {
-    //Here we allow to parse JSON
-   app.use(express.bodyParser());
-    //We can override HTTP methods
+var express  = require("express"),
+    app      = express(),
+    http     = require("http"),
+    server   = http.createServer(app),
+    mongoose = require('mongoose');
+
+app.configure(function () {
+    app.use(express.bodyParser());
     app.use(express.methodOverride());
-    //Allows us to create customized routes
     app.use(app.router);
 });
 
-app.get('/', function(request, response) {
-    var user = {name: "Chesca", password:"123"};
-   response.send(user);
-});
-app.get('/chesco', function(request, response) {
-    var chesco = {name: "Chesco", password:"456"};
-    response.send(chesco);
+routes = require('./routes/labsis')(app);
+mongoose.connect('mongodb://localhost/labsis', function(err, res) {
+    if(err) {
+        console.log('ERROR: connecting to Database. ' + err);
+    } else {
+        console.log('Connected to Database');
+    }
 });
 
 server.listen(3000, function() {
-   console.log("Node is running in chesca REST service");
+    console.log("Node server running on http://localhost:3000");
 });
