@@ -10,7 +10,18 @@ app.configure(function () {
     app.use(app.router);
 });
 
+app.all('*', function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header('Access-Control-Allow-Methods', 'OPTIONS,GET,POST,PUT,DELETE');
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With");
+    if ('OPTIONS' == req.method){
+        return res.send(200);
+    }
+    next();
+});
+
 routes = require('./routes/labsis')(app);
+
 mongoose.connect('mongodb://localhost/labsis', function(err, res) {
     if(err) {
         console.log('ERROR: connecting to Database. ' + err);
@@ -19,6 +30,6 @@ mongoose.connect('mongodb://localhost/labsis', function(err, res) {
     }
 });
 
-server.listen(3000, function() {
+server.listen(2700, function() {
     console.log("Node server running on http://localhost:3000");
 });
